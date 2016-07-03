@@ -1,0 +1,46 @@
+<?php
+
+$all_depts = array("Computer Science and Engineering",
+                    "Civil Engineering",
+                    "Electrical Engineering",
+                    "Energy Science and Engineering",
+                    "Aerospace Engineering",
+                    "Chemical Engineering",
+                    "Biosciences and Bioengineering",
+                    "Chemistry",
+                    "Earth Sciences",
+                    "Humanities and Social Science",
+                    "Industrial Design Centre",
+                    "Mathematics",
+                    "Mechanical Engineering",
+                    "Metallurgical Engineering and Materials Science",
+                    "Physics");
+                    
+$depname_to_short = to_shortform($all_depts);
+
+$short_to_depname = to_longform($depname_to_short, $all_depts);
+
+function to_longform($depname_to_short_array, $all_depts_array)
+{
+    $short_to_depname = array();
+    for($i=0; $i<count($all_depts_array); $i++)
+    {
+        $short_to_depname.array_push(($depname_to_short_array[$all_depts_array[$i]]) => $all_depts_array[$i]);
+    }
+    return $short_to_depname;
+}
+
+function to_shortform($all_depts_array)
+{
+    $depname_to_short = array();
+    for($i=0; $i<count($all_depts_array); $i++)
+    {
+        $string = preg_replace('/\s+/', '', $all_depts_array[i]);
+        $depname_to_short.array_push($all_depts_array[i]) => $string);
+    }
+    return $depname_to_short;
+}
+
+
+
+?>
