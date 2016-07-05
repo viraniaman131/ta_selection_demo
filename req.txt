@@ -12,6 +12,10 @@ For students:
         
     3. At first login, they must provide details like CPI, year of study, Department(if cant be gotten by LDAP), #ask for more fields. They 
        can update their info in a separate page
+
+    4. Waitlisting feature. 
+
+    5. Course page feature. They can answer questions put by faculty and view the current applicants in this page. 
     
 For Faculty:
     1. Add new courses

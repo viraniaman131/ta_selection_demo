@@ -56,7 +56,6 @@ function ldap_auth($ldap_id, $ldap_password) {
     $info = ldap_get_entries($ds, $sr);
     $ldap_id = $info[0]['dn'];
     if (@ldap_bind($ds, $ldap_id, $ldap_password)) {
-             
         return true;
     } else {
         return false;

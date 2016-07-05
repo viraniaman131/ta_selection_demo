@@ -70,10 +70,8 @@
         <th>Course Name</th>
         <th>Professor's Name</th>
         <th>Department</th>
-        <th>Course Details</th>
         <th>Prerequisites</th>
         <th>Last Date<br>Of Application</th>
-        <th>Extra Notes</th>
         <th>Apply</th>
       </tr>
     </thead>
@@ -108,11 +106,9 @@
                 <td>".$row['course_name']."</td>
                 <td>".$row['prof_name']."</td>
                 <td>".$row['department']."</td>
-                <td>".$row['course_details']."</td>
                 <td>".$row['eligibility_criteria']."</td>
                 <td>".$row['deadline']."</td>
-                <td>".$row['extra_notes']."</td>
-                <td><form action='apply.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' onclick='return window.confirm(\"Are you sure you want to apply for this course?\");' value='Apply'></input></form></td>
+                <td><form action='apply.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' onclick='return window.confirm(\"Are you sure you want to apply for this course?\");' value='Go to course page'></input></form></td>
            </tr>";
         }
     } else {
