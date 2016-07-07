@@ -3,7 +3,7 @@
 
 <?php
 
-if(preg_match("/sop_a_\d/", "sop_a_a"))
+if(preg_match("/sop_q_\d/", "sop_q_a"))
 {
     echo "Works";
 }

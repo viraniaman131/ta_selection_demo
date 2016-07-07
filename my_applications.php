@@ -84,7 +84,8 @@ $ldap_id = $_SESSION['ldap_id'];
                         <td>".$row2['eligibility_criteria']."</td>
                         <td>".$row2['deadline']."</td>
                         <td>".$row['status_of_application']."</td>
-                        <td><form action='remove_application.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' onclick='return window.confirm(\"Are you sure you want to remove your application for this course?\");' value='Remove'></input></form></td>
+                        <td><form action='apply.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' value='Go to course page'></input>
+                            <input type='hidden' name='deadline' value='".$row2['deadline']."' /></form></td>
                    </tr>";
                }
            }

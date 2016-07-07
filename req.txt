@@ -69,3 +69,4 @@ TODO:
 5. Add search by keyword in student.php
 6. Add notification to update CPI and Year of study in student.php for easy access.
 7. Redirect from each page if not logged in
+8. Get prof name and dept from LDAP

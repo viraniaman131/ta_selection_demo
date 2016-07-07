@@ -108,7 +108,8 @@
                 <td>".$row['department']."</td>
                 <td>".$row['eligibility_criteria']."</td>
                 <td>".$row['deadline']."</td>
-                <td><form action='apply.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' onclick='return window.confirm(\"Are you sure you want to apply for this course?\");' value='Go to course page'></input></form></td>
+                <td><form action='apply.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' value='Go to course page'></input>
+                    <input type='hidden' name='deadline' value='".$row['deadline']."'/></form></td>
            </tr>";
         }
     } else {

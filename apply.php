@@ -15,7 +15,6 @@
     
     //=====================   END OF TEMP CODE HERE   ===================
     
-    
 ?>
 
 <?php
@@ -44,10 +43,6 @@
             {
                 die("Some error occured while fetching course info. Please contact Aman Virani at 9821212128");
             }
-        }
-        else
-        {
-            echo "Wrong value man";
         }
     }
 
@@ -91,7 +86,6 @@
     {
         die("Some error occured while fetching student application info. Please contact Aman Virani at 9821212128");
     }
-    
     
     
         
@@ -198,7 +192,17 @@
     
     <?php
     
-    $accept_state = $waitlist_state = $apply_state = $rejected_state = false;
+    function date_not_passed($date)
+    {
+        $todays_date = date('Y-m-d');
+        if(strtotime($date) > strtotime($todays_date))
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    $accept_state = $waitlist_state = $apply_state = $rejected_state = $interview_pending_state = false;
     
     //Getting accept_state
     
@@ -211,7 +215,15 @@
     
     if($student_application_info['status_of_application'] == "Not applied")
     {
-        $apply_state = true;
+        if(strtotime(date('Y-m-d')) > strtotime($_POST['deadline']))
+        {
+            $apply_state = false;
+        }
+        else
+        {
+            $apply_state = true;
+        }
+        
     }
     
     if($student_application_info['status_of_application'] == "Waitlisted")
@@ -222,6 +234,11 @@
     if($student_application_info['status_of_application'] == "Rejected")
     {
         $rejected_state = true;
+    }
+    
+    if($student_application_info['status_of_application'] == "Interview Pending")
+    {
+        $interview_pending_state = true;
     }
     
     echo "<form action='apply_for_taship.php' method='post' style='float:right;' id='submit_form' onsubmit='return check_empty_form()'>";
@@ -243,6 +260,19 @@
     {
         echo "<h4>Your application was rejected</h4>";
     }
+    
+    if($interview_pending_state)
+    {
+        if(strtotime(date('Y-m-d')) <= strtotime($_POST['deadline']))
+        {
+            echo "<input type='submit' value='Remove Application' name='button' onclick='window.alert(\"Disclaimer\")'/><br><br>";
+        }
+        else
+        {
+            echo "Time for removal of application has passed.";
+        }
+    }
+    
     echo "</form><br>";
     
     ?>
@@ -291,7 +321,6 @@
                 $query_status = "SELECT * FROM student_details WHERE ldap_id='".$row['ldap_id']."'";
                 $result_of_status_query = mysqli_query($conn, $query_status);
                 $status = NULL;
-                echo "mysqli_num_rows($result_of_status_query)";
                 if(mysqli_num_rows($result_of_status_query)>0)
                 {
                     while($row2 = mysqli_fetch_assoc($result_of_status_query))
@@ -303,11 +332,19 @@
                         . "<td>".$row2['cpi']."</td>";
                     }
                 }
+                else
+                {
+                    echo "0 results in second query";
+                }
                 
                 echo "<td>".$row['status_of_application']."</td>"
                         . "</tr>";
                 
             }
+        }
+        else
+        {
+            echo "0 results";
         }
 
         ?>

@@ -85,6 +85,9 @@ if (isset($_POST['login1'])) {
         if (is_faculty($username)) {
             $_SESSION['ldap_id'] = $username;
             $_SESSION['user_type'] = 'faculty';
+            $_SESSION['prof_name'] = ''; //@todo get prof name here
+            $_SESSION['department'] = ''; //@todo get prof dept here
+            
             header("location: faculty.php");
         } else {
             die('Please enter your LDAP ID in the correct field');
