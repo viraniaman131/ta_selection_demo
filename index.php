@@ -22,32 +22,29 @@ if (isset($_SESSION['ldap_id'])) {
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"> 
     </head>
     <body>
-        <br>
-            <br>
-                <br>
-                    <form method="POST" action="index.php">
-                        <center><br><br><br><br>			 
-                                            <p>For Faculty</p>
-                                            <table style="font-size:16px;margin-left:20px;">
-                                                <tr><td>LDAP ID:</td> <td><input type='text' name='username1'></td></tr>
-                                                <tr><td>Password: </td> <td><input type='password' name='password1'></td></tr>
-                                                <tr><td><td><input type='submit'  name='login1' class='btn btn-success' value='Submit'></td></td></tr>
-                                            </table>
-                                            </form>
+        <form method="POST" action="index.php">
+            <center>			 
+                <p>For Faculty</p>
+                <table style="font-size:16px;margin-left:20px;">
+                    <tr><td>LDAP ID:</td> <td><input type='text' name='username1'></td></tr>
+                    <tr><td>Password: </td> <td><input type='password' name='password1'></td></tr>
+                    <tr><td><td><input type='submit'  name='login1' class='btn btn-success' value='Submit'></td></td></tr>
+                </table>
+        </form>
 
-                                            <form method="POST" action="index.php">
-                                                <center><br><br><br><br>	
-                                                                    <p>For Students</p>		 
-                                                                    <table style="font-size:16px;margin-left:20px;">
-                                                                        <tr><td>LDAP ID:</td> <td><input type='text' name='username2'></td></tr>
-                                                                        <tr><td>Password: </td> <td><input type='password' name='password2'></td></tr>
-                                                                        <tr><td><td><input type='submit'  name='login2' class='btn btn-success' value='Submit'></td></td></tr>
-                                                                    </table>
-                                                                    </form>
-                                                                    </body>
-                                                                    </html>
+        <form method="POST" action="index.php">
+            <p>For Students</p>		 
+            <table style="font-size:16px;margin-left:20px;">
+                <tr><td>LDAP ID:</td> <td><input type='text' name='username2'></td></tr>
+                <tr><td>Password: </td> <td><input type='password' name='password2'></td></tr>
+                <tr><td><td><input type='submit'  name='login2' class='btn btn-success' value='Submit'></td></td></tr>
+            </table>
+        </form>
+    </body>
+</html>
 
 <?php
+
 function ldap_auth($ldap_id, $ldap_password) {
     $ds = ldap_connect("ldap.iitb.ac.in") or die("Unable to connect to LDAP server. Please try again later.");
     if ($ldap_id == '')
@@ -85,15 +82,15 @@ if (isset($_POST['login1'])) {
         if (is_faculty($username)) {
             $_SESSION['ldap_id'] = $username;
             $_SESSION['user_type'] = 'faculty';
-            
+
             $ds = ldap_connect("ldap.iitb.ac.in") or die("Unable to connect to LDAP server. Please try again later.");
             $sr = ldap_search($ds, "dc=iitb,dc=ac,dc=in", "(uid=$username)");
             $info = ldap_get_entries($ds, $sr);
-            
-            $_SESSION['prof_name'] = $info[0]['cn'][0]; 
-            $str = explode(",",$info[0]['dn'])[2];
-            $_SESSION['department'] = substr($str, (strrpos($str, "="))+1);
-            
+
+            $_SESSION['prof_name'] = $info[0]['cn'][0];
+            $str = explode(",", $info[0]['dn'])[2];
+            $_SESSION['department'] = $department_to_very_short[substr($str, (strrpos($str, "=")) + 1)];
+
             header("location: faculty.php");
         } else {
             die('Please enter your LDAP ID in the correct field');
@@ -111,42 +108,34 @@ if (isset($_POST['login1'])) {
             $_SESSION['ldap_id'] = $username;
             $_SESSION['user_type'] = 'student';
             $next_page = "location: student.php";
-            
+
             //Add entry to student details database if doesnt already exist
-            
-            $check_query = "SELECT ldap_id FROM student_details WHERE ldap_id='".$username."'";
+
+            $check_query = "SELECT ldap_id FROM student_details WHERE ldap_id='" . $username . "'";
             $result = mysqli_query($conn, $check_query);
-            if(mysqli_num_rows($result)==0)
-            {
+            if (mysqli_num_rows($result) == 0) {
                 //Getting Name and department from ldap database
-                
+
                 $ds = ldap_connect("ldap.iitb.ac.in") or die("Unable to connect to LDAP server. Please try again later.");
                 $sr = ldap_search($ds, "dc=iitb,dc=ac,dc=in", "(uid=$username)");
                 $info = ldap_get_entries($ds, $sr);
                 $name = $info[0]['cn'][0]; //This is the name
                 $department = NULL;
-                
-                foreach ($department_to_very_short as $short => $long)
-                {
-                    $dep = explode(",",$info[0]['dn'])[2];
-                    if(("ou=".$short) == $dep)
-                    {
+
+                foreach ($department_to_very_short as $short => $long) {
+                    $dep = explode(",", $info[0]['dn'])[2];
+                    if (("ou=" . $short) == $dep) {
                         $department = $long;
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         $department = "Enter Full Name of department here";
                     }
                 }
-                
-                $insert_query = "INSERT INTO student_details (ldap_id, name, department) VALUES ('".$username."', '".$name."', '".$department."')";
-                if(mysqli_query($conn, $insert_query))
-                {
+
+                $insert_query = "INSERT INTO student_details (ldap_id, name, department) VALUES ('" . $username . "', '" . $name . "', '" . $department . "')";
+                if (mysqli_query($conn, $insert_query)) {
                     $next_page = "location: my_info.php";
-                }
-                else
-                {
+                } else {
                     echo mysqli_error($conn);
                     die();
                 }

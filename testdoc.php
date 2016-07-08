@@ -21,6 +21,7 @@
                     <li><a href="#">Page 2</a></li>
                     <li><a href="#">Page 3</a></li>
                 </ul>
+                <a href="logout.php" class="navbar-brand pull-right">Logout</a>
             </div>
         </nav>
 

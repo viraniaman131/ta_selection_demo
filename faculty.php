@@ -74,6 +74,7 @@ if(isset($_POST['status']))
                     <li class="active"><a href="faculty.php">View & Edit Student Applications</a></li>
                     <li><a href="edit_course_info.php">Edit Course Information</a></li>
                 </ul>
+                <a href="logout.php" class="navbar-brand pull-right">Logout</a>
             </div>
         </nav>
 

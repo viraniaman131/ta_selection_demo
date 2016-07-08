@@ -93,6 +93,7 @@ $sql = "SELECT * FROM student_applications WHERE ldap_id='".$ldap_id."'";
       <li class="active"><a href="my_applications.php">My Applications</a></li>
       <li><a href="my_info.php">My Info</a></li>
     </ul>
+      <a href="logout.php" class="navbar-brand pull-right">Logout</a>
   </div>
 </nav>
 
