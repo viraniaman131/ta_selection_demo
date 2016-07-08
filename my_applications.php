@@ -6,6 +6,64 @@ $ldap_id = $_SESSION['ldap_id'];
 
 ?>
 
+<?php
+
+//Removing everything else if selected in one course
+
+$sql = "SELECT * FROM student_applications WHERE ldap_id='".$ldap_id."'";
+    
+    $result = mysqli_query($conn, $sql);
+
+    if (mysqli_num_rows($result) > 1) {
+
+        // output data of each row
+        while($row = mysqli_fetch_assoc($result)) {
+           
+           if($row['student_answer']=='Accepted')
+           {
+               $query2 = "DELETE FROM student_applications WHERE ldap_id='$ldap_id' AND NOT course_code='".$row['course_code']."'";
+               if(!mysqli_query($conn, $query2))
+               {
+                   echo "Some problem with deleting the rest of the entries after getting selected in one. "
+                   . "Contact Aman Virani at 9821212128.";
+               }
+           }
+           /*
+           $result2 = mysqli_query($conn, "SELECT * FROM course_info WHERE course_code='".$course_code1."'");
+           
+           if(mysqli_num_rows($result2)>0)
+           {
+                while($row2 = mysqli_fetch_assoc($result2))
+               {
+                   echo "
+                    <tr>
+                        <td>".$row2['course_code']."</td>
+                        <td>".$row2['course_name']."</td>
+                        <td>".$row2['prof_name']."</td>
+                        <td>".$row2['department']."</td>
+                        <td>".$row2['course_details']."</td>
+                        <td>".$row2['eligibility_criteria']."</td>
+                        <td>".$row2['deadline']."</td>
+                        <td>".$row['status_of_application']."</td>
+                        <td><form action='apply.php' method='post'><input class='btn mini blue-stripe' type='submit' name='".$row['course_code']."' value='Go to course page'></input>
+                            <input type='hidden' name='deadline' value='".$row2['deadline']."' /></form></td>
+                   </tr>";
+               }
+           }
+           else
+           {
+                echo "some problem in second query \n";
+           }          
+            * 
+            */
+        }
+    } 
+
+?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -99,7 +157,6 @@ $ldap_id = $_SESSION['ldap_id'];
     {
     }
 
-    mysqli_close($conn);
     ?>        
     <tbody>
     

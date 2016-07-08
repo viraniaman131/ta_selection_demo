@@ -4,7 +4,7 @@ session_start();
 require_once 'connection.php';
 
 // TEMP SOURCE CODE
-$_SESSION['ldap_id'] = "sample_ldap";
+$_SESSION['ldap_id'] = "sample_ldap3";
 // END TEMP CODE
 
 $prof_details = NULL;
@@ -20,6 +20,13 @@ if(mysqli_num_rows($result_query_prof_details)>0)
     }
 }
 
+if($prof_details == NULL || count($prof_details)==0)
+{
+    header("location: edit_course_info.php");
+}
+
+$_SESSION['course_code'] = $prof_details['course_code'];
+
 $student_status_set = NULL;
 
 if(!isset($_SESSION['ldap_id']))
@@ -32,7 +39,7 @@ if(isset($_POST['status']))
     //Logic to update DB entry for student application
     
     $query = "UPDATE student_applications SET status_of_application='".$_POST['status']."'"
-            . "WHERE ldap_id='".$_POST['student_ldap']."'";
+            . "WHERE ldap_id='".$_POST['student_ldap']."' AND course_code='".$_SESSION['course_code']."'";
     
     if(mysqli_query($conn, $query))
     {
@@ -76,7 +83,7 @@ if(isset($_POST['status']))
             
             if(!course_is_set())
             {
-                echo "<p style='color:red'><a href='edit_course_info.php'>Please set your course details first!</a></p><br>"
+                echo "<p style='color:red;'><a href='edit_course_info.php'>Please set your course details first!</a></p><br>"
                 . "Details of students who have applied for your course will show in the table below. Then you can read their"
                         . " SOP answers by clicking on the View SOP button, or set their selection status by choosing from"
                         . " the drop down list. <br><br>";
@@ -98,6 +105,7 @@ if(isset($_POST['status']))
                     <th>Contact Number</th>
                     <th>View SOP</th>
                     <th>Set Selection Status</th>
+                    <th>Student Replied</th>
                 </tr>
                 
                 <?php
@@ -151,7 +159,7 @@ if(isset($_POST['status']))
                         $student_name = NULL;
                         $query_student_info = "SELECT * FROM student_details WHERE ldap_id='".$row['ldap_id']."'";
                         $result_query_student_info = mysqli_query($conn, $query_student_info);
-                        if(mysqli_num_rows($result_query_student_info))
+                        if(mysqli_num_rows($result_query_student_info)>0)
                         {
                             while($row2 = mysqli_fetch_assoc($result_query_student_info))
                             {
@@ -202,13 +210,20 @@ if(isset($_POST['status']))
                         . "</form>";
                         echo "</td>";
                         
+                        echo "<td>"
+                        . $row['student_answer']
+                        . "</td>";
+                        
                         echo "</tr>";
                         
                     }
                 }
                 else
                 {
-                    echo "Please set your course information first!";
+                    if($_SESSION['course_code']=="" || $_SESSION['course_code']==NULL)
+                    {
+                        echo "Please set your course info first.";
+                    }
                 }
                 
                 ?>

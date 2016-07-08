@@ -87,7 +87,13 @@
         die("Some error occured while fetching student application info. Please contact Aman Virani at 9821212128");
     }
     
-    
+    function num_of_applications($ldap_id)
+    {
+        global $conn;
+        $query = "SELECT * FROM student_applications WHERE ldap_id='$ldap_id'";
+        $result = mysqli_query($conn, $query);
+        return mysqli_num_rows($result);
+    }
         
 ?>
 
@@ -219,6 +225,10 @@
         {
             $apply_state = false;
         }
+        else if(num_of_applications($_SESSION['ldap_id']) >= 3)
+        {
+            $apply_state = false;
+        }
         else
         {
             $apply_state = true;
@@ -244,12 +254,20 @@
     echo "<form action='apply_for_taship.php' method='post' style='float:right;' id='submit_form' onsubmit='return check_empty_form()'>";
     if($accept_state)
     {
-        echo "<input type='submit' value='Accept TAship' name='button' onclick='window.alert(\'Disclaimer\')'/><br>";
-        echo "<input type='submit' value='Reject TAship' name='button' onclick='window.alert(\'Disclaimer\')'/><br>";
+        if($student_application_info['student_answer']!='Accepted')
+        {
+            echo "<input type='submit' value='Accept TAship' name='button' onclick='window.confirm(\"Disclaimer\")'/><br>";
+            echo "<input type='submit' value='Reject TAship' name='button' onclick='window.confirm(\"Disclaimer\")'/><br>";
+        }
+        else
+        {
+            echo "You have accepted the TAShip";
+        }
+        
     }
     if($apply_state)
     {
-        echo "<input type='submit' value='Apply for TAship' name='button' onclick='window.alert(\'Disclaimer\')'/><br><br>";
+        echo "<input type='submit' value='Apply for TAship' name='button' onclick='window.alert(\"Disclaimer\")'/><br><br>";
     }
     if($waitlist_state)
     {
@@ -265,7 +283,7 @@
     {
         if(strtotime(date('Y-m-d')) <= strtotime($_POST['deadline']))
         {
-            echo "<input type='submit' value='Remove Application' name='button' onclick='window.alert(\"Disclaimer\")'/><br><br>";
+            echo "<input type='submit' value='Remove Application' name='button' onclick='window.alert('isclaimer')'/><br><br>";
         }
         else
         {

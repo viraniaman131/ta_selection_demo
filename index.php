@@ -2,7 +2,7 @@
 session_start();
 
 require_once 'connection.php';
-require_once 'session_details.php';
+require_once 'department_assoc_array.php';
 
 if (isset($_SESSION['ldap_id'])) {
     if ($_SESSION['user_type'] == 'student') {
@@ -85,8 +85,14 @@ if (isset($_POST['login1'])) {
         if (is_faculty($username)) {
             $_SESSION['ldap_id'] = $username;
             $_SESSION['user_type'] = 'faculty';
-            $_SESSION['prof_name'] = ''; //@todo get prof name here
-            $_SESSION['department'] = ''; //@todo get prof dept here
+            
+            $ds = ldap_connect("ldap.iitb.ac.in") or die("Unable to connect to LDAP server. Please try again later.");
+            $sr = ldap_search($ds, "dc=iitb,dc=ac,dc=in", "(uid=$username)");
+            $info = ldap_get_entries($ds, $sr);
+            
+            $_SESSION['prof_name'] = $info[0]['cn'][0]; 
+            $str = explode(",",$info[0]['dn'])[2];
+            $_SESSION['department'] = substr($str, (strrpos($str, "="))+1);
             
             header("location: faculty.php");
         } else {

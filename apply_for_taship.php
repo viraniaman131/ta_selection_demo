@@ -3,15 +3,12 @@
 session_start();
 require_once 'connection.php';
 
-var_dump($_POST);
-
 $ldap_id = $_SESSION['ldap_id'];
 $course_code = $_POST['course_code'];
 
 $sop_answers = get_sop_answers();
 $status_of_application = get_status();
 
-echo "<br>executed till here";
 
 ?>
 <?php
@@ -80,7 +77,7 @@ if($_POST['button']=='Apply for TAship')
 {
     if(get_num_of_current_courses($ldap_id)<3 && not_yet_applied_for($course_code))
     {
-        $query = "INSERT INTO student_applications (ldap_id, course_code, status_of_application, sop_answers) values ('$ldap_id','$course_code', 'Interview Pending', '".$sop_answers."')";
+        $query = "INSERT INTO student_applications (ldap_id, course_code, status_of_application, sop_answers, student_answer) values ('$ldap_id','$course_code', 'Interview Pending', '".$sop_answers."', student_answer='Not applicable')";
         if(!mysqli_query($conn, $query))
         {
             die("There was some problem applying you for this course. Contact Aman Virani - 9821212128");
@@ -104,10 +101,10 @@ if($_POST['button']=='Accept TAship')
     
     if(mysqli_query($conn, $query))
     {
-        $accept_query = "INSERT INTO student_applications (ldap_id, course_code, status_of_application, sop_answers) values ('$ldap_id','$course_code', 'Selected', '".$sop_answers."')";
+        $accept_query = "INSERT INTO student_applications (ldap_id, course_code, status_of_application, sop_answers, student_answer) values ('$ldap_id','$course_code', 'Selected', '".$sop_answers."', 'Accepted')";
         if(mysqli_query($conn, $accept_query))
         {
-            echo "Successfully accepted TAship for $course_code! Congratulations!";
+            echo "Successfully accepted TAship for $course_code! Congratulations! ";
             echo "<a href='my_applications.php'>Go to my applications</a>";
         }
         else
@@ -156,6 +153,7 @@ if($_POST['button'] == 'Reject TAship')
 
 if($_POST['button'] == 'Remove Application')
 {
+    
     $query = "DELETE FROM student_applications WHERE ldap_id='$ldap_id' AND course_code='$course_code'";
     if(mysqli_query($conn, $query))
     {

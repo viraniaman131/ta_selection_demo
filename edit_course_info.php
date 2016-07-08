@@ -1,5 +1,9 @@
 <?php
 
+// TEMP SOURCE CODE
+$_SESSION['ldap_id'] = "sample_ldap3";
+// END TEMP CODE
+
 session_start();
 require_once 'connection.php';
 
@@ -10,7 +14,7 @@ if(!isset($_SESSION['ldap_id']))
 
 $course_info = array();
 
-$query = "SELECT * FROM course_info WHERE prof_name='".$_SESSION['prof_name']."'";
+$query = "SELECT * FROM course_info WHERE prof_ldap='".$_SESSION['ldap_id']."'";
 $result = mysqli_query($conn, $query);
 
 if(mysqli_num_rows($result)>0)
@@ -109,10 +113,24 @@ $sop_questions = explode(";@;", $course_info['sop_questions']);
             }
             document.getElementById('sop_q_'+j).remove();
             document.getElementById('sop_q_p_'+j).remove();
-            document.getElementById('sop_q_br_'+j).remove();
             document.getElementById('num_q').value = j;
             console.log("Value of num_q = "+j)
             
+        }
+        
+        function check_sop_filled()
+        {
+            var i = document.getElementById('num_q').value;
+            var j = parseInt(i);
+            for(var k=0; k<j; k++)
+            {
+                if(document.getElementById('sop_q_'+k).value == '' || document.getElementById('sop_q_'+k).value == null)
+                {
+                    window.alert("Please fill all SOP questions before");
+                    return false;
+                }
+            }
+            return true;
         }
         
         </script>
@@ -230,7 +248,8 @@ $sop_questions = explode(";@;", $course_info['sop_questions']);
                 
             </table>
                 
-            <input type="submit" name="save_course_info" value="Save Course Information" class="btn" style="float:right"/>
+            <input type="submit" name="save_course_info" value="Save Course Information" class="btn" style="float:right"
+                   onclick="return check_sop_filled()"/>
             
             <h3>Enter SOP Questions here:</h3>
             
@@ -259,7 +278,7 @@ $sop_questions = explode(";@;", $course_info['sop_questions']);
             </form>
             
             <button id="add_q_btn" onclick="add_fields()">Add Another Question</button>
-            <button id="remove_q_btn" onclick="remove_field()">Remove Last Question</button>
+            <button id="remove_q_btn" onclick="window.confirm('Are you sure you want to remove this question?'); remove_field()">Remove Last Question</button>
             
         </div>
 
