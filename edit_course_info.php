@@ -12,6 +12,12 @@ if(!isset($_SESSION['ldap_id']))
     die("Please login first!");
 }
 
+function get_reformatted_date($date)
+{
+    $date_array = explode("/", $date);
+    return $date_array[2]."-".$date_array[0]."-".$date_array[1];
+}
+
 $course_info = array();
 
 $query = "SELECT * FROM course_info WHERE prof_ldap='".$_SESSION['ldap_id']."'";

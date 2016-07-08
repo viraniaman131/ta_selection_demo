@@ -24,8 +24,14 @@ $department = $_SESSION['department'];
 
 function get_reformatted_date($date)
 {
-    $date_array = explode("/", $date);
-    return $date_array[2]."-".$date_array[0]."-".$date_array[1];
+    
+    $date_array1 = explode("/", $date);
+    $date_array2 = explode("-", $date);
+    if(count($date_array2) == 3)
+    {
+        return $date_array2;
+    }
+    return $date_array1[2]."-".$date_array1[0]."-".$date_array1[1];
 }
 
 function course_exists()
